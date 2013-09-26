@@ -89,23 +89,21 @@ An app for interacting with the Hue service to control Hue lights.
 
   rule turn_one_on {
     select when office door_open
-     // {
-     //  hue:all_on_in_group(0);
-     // }
     always {
       raise explicit event office_lights
-        with state = "on"
+        with state = "on";
+      raise explicit event office_heater
+        with state = "on";
     }
   }
 
   rule turn_one_off {
     select when office door_closed
-     // {
-     //  hue:all_off_in_group(0);
-     // }
     always {
       raise explicit event office_lights
-        with state = "off"
+        with state = "off";
+      raise explicit event office_heater
+        with state = "off";
     }
   }
 
@@ -115,10 +113,6 @@ An app for interacting with the Hue service to control Hue lights.
     select when thermostat temperature
     pre {
       trend =  pds:get_item('thermostat','last_temp_trend');
-       // hue = trend eq 'red'   => 3000 |
-       //       trend eq 'green' => 40000 |
-       //                           15000;
-
       hue = trend eq 'red'   => 8 |
             trend eq 'green' => 240 |
                                 55;
